@@ -6,14 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/trialTest")
-public class TrialTestController {
+@RequestMapping("/api/trialTest")public class TrialTestController {
     @Autowired
     private TrialTestServiceImpl trialTestService;
 
     @PostMapping("/createNew")
-    public TrialTestDTO createNew(@RequestBody TrialTestDTO trialTestDTO, @RequestParam long candidateId) {
-        return this.trialTestService.createNew(trialTestDTO, candidateId);
+    public TrialTestDTO createNew(@RequestBody TrialTestDTO trialTestDTO, @RequestParam long drivingCourseId) {
+        return this.trialTestService.createNew(trialTestDTO, drivingCourseId);
     }
 
     @PostMapping("/edit")

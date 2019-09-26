@@ -1,4 +1,4 @@
-package mk.ukim.finki.drivingschoolevidencesystem.web;
+    package mk.ukim.finki.drivingschoolevidencesystem.web;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.QualificationDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.service.impl.QualificationServiceImpl;
@@ -12,13 +12,13 @@ public class QualificationController {
     private QualificationServiceImpl qualificationService;
 
     @PostMapping("/createNew")
-    public QualificationDTO createNew(@RequestBody QualificationDTO qualificationDTO, @RequestParam long candidateId) {
-        return qualificationService.createNew(qualificationDTO, candidateId);
+    public QualificationDTO createNew(@RequestBody QualificationDTO qualificationDTO, @RequestParam long drivingCourseId) {
+        return qualificationService.createNew(qualificationDTO, drivingCourseId);
     }
 
     @PostMapping("/edit")
-    public QualificationDTO edit(@RequestBody QualificationDTO qualificationDTO, @RequestParam long candidateId) {
-        return qualificationService.edit(qualificationDTO, candidateId);
+    public QualificationDTO edit(@RequestBody QualificationDTO qualificationDTO) {
+        return qualificationService.edit(qualificationDTO);
     }
 
     @DeleteMapping

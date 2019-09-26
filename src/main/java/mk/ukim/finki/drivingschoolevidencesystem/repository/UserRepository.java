@@ -12,6 +12,6 @@ import java.util.Set;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
     Optional<User> findUserByEmail(String email);
-    Optional<User> findUserByIdAndRolesContains_name(long id, String name);
+    Optional<User> findUserByIdAndRoles_name(long id, String name);
     User findUserByEmbg(String embg);
 }

@@ -2,10 +2,10 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.QualificationDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DrivingCourse;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Qualification;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.DrivingCourseRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.QualificationRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.QualificationService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,46 +24,43 @@ public class QualificationServiceImpl implements QualificationService{
 
     @Transactional
     @Override
-    public QualificationDTO createNew(QualificationDTO qualificationDTO, long candidateId) {
-        Qualification qualification = qualificationRepository.findByTypeAndCandidate_Id(qualificationDTO.getType(),
-                                                                                        candidateId);
+    public QualificationDTO createNew(QualificationDTO qualificationDTO, long drivingCourseId) {
+        Qualification qualification = qualificationRepository.findByTypeAndDrivingCourse_Id(qualificationDTO.getType(),
+                                                                                        drivingCourseId);
         if(qualification != null) {
-            throw new TrafficSchoolException("Qualification of type = " + qualificationDTO.getType() + " for candidate with id = " + candidateId + " already exists");
+            throw new TrafficSchoolException("Qualification of type = " + qualificationDTO.getType() + " for driving course = " + drivingCourseId + " already exists");
         }
 
-        qualification = modelMapper.map(qualificationDTO, Qualification.class);
-        qualification.setDrivingCourse();
+        setQualification(qualification, qualificationDTO);
+        qualification.setDrivingCourse(getDrivingCourse(drivingCourseId));
         qualification = qualificationRepository.save(qualification);
-        qualificationDTO = modelMapper.map(qualification,QualificationDTO.class);
+        qualificationDTO = modelMapper.map(qualification, QualificationDTO.class);
         return qualificationDTO;
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
-    public Candidate findCandidate(long id) {
-        Candidate candidate = candidateRepository.findById(id)
-                .orElseThrow(() -> new TrafficSchoolException("Candidate with id = " + id + " does not exist"));
-        return candidate;
-    }
-
-    @Transactional
-    @Override
-    public QualificationDTO edit(QualificationDTO qualificationDTO, long candidateId) {
-        long id = qualificationDTO.getId();
-        Qualification qualification = this.qualificationRepository.findById(id)
-                                                                .orElseThrow(() -> new TrafficSchoolException("Qualification with id = " + id + " does not exist"));
-
-        Qualification tmpQualification = this.qualificationRepository.findByIdNotAndTypeAndCandidate_Id(id, qualificationDTO.getType(), candidateId);
-        if(tmpQualification != null) {
-            throw new TrafficSchoolException("Qualification for type = " + qualificationDTO.getType() + " and for candidate with id = " + candidateId + " already exists");
-        }
-
+    private void setQualification(Qualification qualification, QualificationDTO qualificationDTO) {
         qualification.setType(qualificationDTO.getType());
         qualification.setStartDate(qualificationDTO.getStartDate());
         qualification.setEndDate(qualificationDTO.getEndDate());
         qualification.setTotalHours(qualificationDTO.getTotalHours());
+    }
+    @Transactional(propagation = Propagation.MANDATORY)
+    public DrivingCourse getDrivingCourse(long id) {
+        DrivingCourse drivingCourse = drivingCourseRepository.findById(id)
+                .orElseThrow(() -> new TrafficSchoolException("Driving course  with id = " + id + " does not exist"));
+        return drivingCourse;
+    }
+
+    @Transactional
+    @Override
+    public QualificationDTO edit(QualificationDTO qualificationDTO) {
+        long id = qualificationDTO.getId();
+        Qualification qualification = this.qualificationRepository.findById(id)
+                                                                .orElseThrow(() -> new TrafficSchoolException("Qualification with id = " + id + " does not exist"));
+
+        setQualification(qualification, qualificationDTO);
         qualification = qualificationRepository.save(qualification);
         qualificationDTO = modelMapper.map(qualification, QualificationDTO.class);
-
         return qualificationDTO;
     }
 

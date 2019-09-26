@@ -14,6 +14,7 @@ public class DrivingCourse {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(unique = true)
     private String ordinalNumber;
     @ManyToOne
     private User lecturer;

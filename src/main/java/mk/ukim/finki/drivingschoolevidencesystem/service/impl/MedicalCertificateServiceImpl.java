@@ -41,7 +41,7 @@ public class MedicalCertificateServiceImpl implements MedicalCertificateService{
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User findCandidate(long id) {
-        User candidate = userRepository.findUserByIdAndRolesContains_name(id, Constants.Role.CANDIDATE.name())
+        User candidate = userRepository.findUserByIdAndRoles_name(id, Constants.Role.CANDIDATE.name())
                                         .orElseThrow(() -> new TrafficSchoolException("Candidate with id = " + id + " does not exist"));
         return candidate;
     }

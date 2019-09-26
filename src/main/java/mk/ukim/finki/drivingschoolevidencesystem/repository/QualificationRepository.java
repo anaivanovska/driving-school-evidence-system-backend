@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface QualificationRepository extends CrudRepository<Qualification, Long> {
-    Qualification findByTypeAndCandidate_Id(String type, long id);
-    Qualification findByIdNotAndTypeAndCandidate_Id(long id, String type, long candidateId);
+    Qualification findByTypeAndDrivingCourse_Id(String type, long drivingCourseId);
+    Qualification findByIdNotAndTypeAndDrivingCourse_Id(long id, String type, long drivingCourseId);
 }

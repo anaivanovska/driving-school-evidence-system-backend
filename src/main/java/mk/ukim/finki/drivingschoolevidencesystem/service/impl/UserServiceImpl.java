@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.jta.UserTransactionAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -103,5 +104,14 @@ public class UserServiceImpl implements UserService {
     public User getUserWithiId(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new TrafficSchoolException("User with id = " + id + " does not exist"));
+    }
+
+    @Transactional
+    @Override
+    public UserDTO getUserByEmail(String email) {
+        User user = userRepository.findUserByEmail(email)
+                            .orElseThrow(() -> new TrafficSchoolException("User with email " + email + " does not exist"));
+        UserDTO userDTO = modelMapper.map(user, UserDTO.class);
+        return userDTO;
     }
 }

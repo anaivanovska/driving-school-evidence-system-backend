@@ -38,24 +38,22 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
             throw new TrafficSchoolException("Driving course with ordinal number " + ordinalNumber + " exists");
         }
 
-        drivingCourse = getDrivingCourse(drivingCourseInputDTO, candidateId);
+        setDrivingCourse(drivingCourse, drivingCourseInputDTO);
+        drivingCourse.setCandidate(getUserByIdAndRole(candidateId, Constants.Role.CANDIDATE.name()));
         drivingCourse = drivingCourseRepository.save(drivingCourse);
         DrivingCourseOutputDTO drivingCourseOutputDTO = modelMapper.map(drivingCourse, DrivingCourseOutputDTO.class);
         return drivingCourseOutputDTO;
     }
 
-    private DrivingCourse getDrivingCourse(DrivingCourseInputDTO drivingCourseInputDTO, long candidateID) {
-        DrivingCourse drivingCourse = new DrivingCourse();
+    private void setDrivingCourse(DrivingCourse drivingCourse, DrivingCourseInputDTO drivingCourseInputDTO) {
         drivingCourse.setOrdinalNumber(drivingCourseInputDTO.getOrdinalNumber());
-        drivingCourse.setCandidate(getUserByIdAndRole(candidateID, Constants.Role.CANDIDATE.name()));
         drivingCourse.setLecturer(getUserByIdAndRole(drivingCourseInputDTO.getLecturerId(), Constants.Role.INSTRUCTOR.name()));
         drivingCourse.setVehicle(getVechileById(drivingCourseInputDTO.getVehicleId()));
-        return drivingCourse;
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getUserByIdAndRole(long id, String roleName) {
-        return userRepository.findUserByIdAndRolesContains_name(id, roleName)
+        return userRepository.findUserByIdAndRoles_name(id, roleName)
                 .orElseThrow(() -> new TrafficSchoolException("Candidate with id " + id + " not found"));
     }
 
@@ -67,11 +65,11 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
 
     @Transactional
     @Override
-    public DrivingCourseOutputDTO edit(DrivingCourseInputDTO drivingCourseInputDTO, long candidateId) {
+    public DrivingCourseOutputDTO edit(DrivingCourseInputDTO drivingCourseInputDTO) {
         long id = drivingCourseInputDTO.getId();
         DrivingCourse drivingCourse = drivingCourseRepository.findById(id)
                                                 .orElseThrow(() -> new TrafficSchoolException("Driving course with id " + id +" does not exist"));
-        drivingCourse = getDrivingCourse(drivingCourseInputDTO, candidateId);
+        setDrivingCourse(drivingCourse, drivingCourseInputDTO);
         drivingCourse = drivingCourseRepository.save(drivingCourse);
         DrivingCourseOutputDTO drivingCourseOutputDTO = modelMapper.map(drivingCourse, DrivingCourseOutputDTO.class);
         return drivingCourseOutputDTO;

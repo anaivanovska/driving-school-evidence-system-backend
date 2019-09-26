@@ -12,6 +12,7 @@ public class UserDTO {
 
     private long id;
     private String embg;
+    private String email;
     private String identityCardNumber;
     private String firstName;
     private String lastName;

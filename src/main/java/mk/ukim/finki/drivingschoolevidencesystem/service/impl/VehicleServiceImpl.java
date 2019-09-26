@@ -51,7 +51,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getInstructor(long id) {
-        User instructor = userRepository.findUserByIdAndRolesContains_name(id, Constants.Role.INSTRUCTOR.name())
+        User instructor = userRepository.findUserByIdAndRoles_name(id, Constants.Role.INSTRUCTOR.name())
                 .orElseThrow(() -> new TrafficSchoolException("Instructor with id = " + id + " does not exist"));
 
         return instructor;

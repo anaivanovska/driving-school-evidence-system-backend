@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@DependsOn("InitializeRoles")
+@DependsOn("initializeRoles")
 @Component
 public class InitializeAdmin {
     @Autowired
