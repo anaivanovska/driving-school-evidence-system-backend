@@ -6,6 +6,9 @@ import mk.ukim.finki.drivingschoolevidencesystem.service.impl.CategoryServiceImp
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/category")
 @CrossOrigin(allowedHeaders = "*", exposedHeaders = SecurityConstants.EXPOSED_HEADERS, origins = "*")
@@ -28,5 +31,10 @@ public class CategoryController {
     public String removeCategory(@RequestParam String name) {
         this.categoryService.remove(name);
         return name;
+    }
+
+    @GetMapping("/all")
+    public Collection<CategoryDTO> getAllCategories() {
+        return this.categoryService.findAll();
     }
 }

@@ -10,7 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+
+@Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
@@ -33,11 +38,12 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDTO edit(CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findCategoryByName(categoryDTO.getName());
-        if(category == null) {
-            throw new TrafficSchoolException("Category with name " + categoryDTO.getName() + " does not exist.");
-        }
-        category.setName(categoryDTO.getName());
+        long id = categoryDTO.getId();
+        String name = categoryDTO.getName();
+        Category category = categoryRepository.findById(id)
+                            .orElseThrow(() -> new TrafficSchoolException("Category with id  " + id + " name " + name + " does not exist."));
+
+        category.setName(name);
         category.setPrice(categoryDTO.getPrice());
         category = categoryRepository.save(category);
         categoryDTO = modelMapper.map(category, CategoryDTO.class);
@@ -52,5 +58,17 @@ public class CategoryServiceImpl implements CategoryService {
             throw new TrafficSchoolException("Category with name " + name + " does not exist.");
         }
         categoryRepository.deleteCategoryByName(name);
+    }
+
+    @Transactional
+    @Override
+    public Collection<CategoryDTO> findAll() {
+        Iterable<Category> categoryIterable = categoryRepository.findAll();
+        Collection<CategoryDTO> categories = new ArrayList<>();
+        categoryIterable.forEach(category -> {
+            CategoryDTO categoryDTO = modelMapper.map(category, CategoryDTO.class);
+            categories.add(categoryDTO);
+        });
+        return categories;
     }
 }

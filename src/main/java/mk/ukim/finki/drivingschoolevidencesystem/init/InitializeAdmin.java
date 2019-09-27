@@ -33,6 +33,8 @@ public class InitializeAdmin {
            String encodedPassword = passwordEncoder.encode(admin.getPassword());
            user = new User();
            user.setEmbg(admin.getEmbg());
+           user.setFirstName(admin.getFirstName());
+           user.setLastName(admin.getLastName());
            user.setEmail(admin.getEmail());
            user.setPassword(encodedPassword);
            Role admin = roleRepository.findById(Constants.Role.ADMIN.name())

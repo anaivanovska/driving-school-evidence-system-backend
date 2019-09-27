@@ -17,7 +17,6 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String parentName;
-    private String password;
     private String proffession;
     @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate birthDate;
