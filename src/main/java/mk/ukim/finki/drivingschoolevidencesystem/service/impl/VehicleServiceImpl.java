@@ -4,10 +4,12 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.VehicleDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Category;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Instructor;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Vehicle;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.CategoryRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.CandidateRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.InstructorRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.VehicleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.VehicleService;
 import org.modelmapper.ModelMapper;
@@ -23,7 +25,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private ModelMapper modelMaper;
     @Autowired
-    private UserRepository userRepository;
+    private InstructorRepository instructorRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -51,7 +53,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getInstructor(long id) {
-        User instructor = userRepository.findUserByIdAndRoles_name(id, Constants.Role.INSTRUCTOR.name())
+        Instructor instructor = instructorRepository.findByIdAndRoles_name(id, Constants.Role.INSTRUCTOR.name())
                 .orElseThrow(() -> new TrafficSchoolException("Instructor with id = " + id + " does not exist"));
 
         return instructor;

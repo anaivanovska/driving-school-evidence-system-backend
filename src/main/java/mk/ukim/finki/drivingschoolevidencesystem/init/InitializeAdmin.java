@@ -5,6 +5,7 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchool
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.CandidateRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -28,7 +29,7 @@ public class InitializeAdmin {
 
     @PostConstruct
     public void init() {
-        User user = userRepository.findUserByEmail(admin.getEmail()).orElse(null);
+        User user = (User) userRepository.findByEmail(admin.getEmail()).orElse(null);
         if(user == null) {
            String encodedPassword = passwordEncoder.encode(admin.getPassword());
            user = new User();
@@ -40,7 +41,7 @@ public class InitializeAdmin {
            Role admin = roleRepository.findById(Constants.Role.ADMIN.name())
                                     .orElseThrow(() -> new TrafficSchoolException("Role admin not found"));
            user.getRoles().add(admin);
-           user = userRepository.save(user);
+           user = (User) userRepository.save(user);
         }
     }
 }

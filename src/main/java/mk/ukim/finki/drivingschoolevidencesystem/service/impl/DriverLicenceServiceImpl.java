@@ -5,7 +5,7 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchool
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DriverLicence;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.DriverLicenceRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.CandidateRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.DriverLicenceService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ public class DriverLicenceServiceImpl implements DriverLicenceService {
     @Autowired
     private DriverLicenceRepository driverLicenceRepository;
     @Autowired
-    private UserRepository userRepository;
+    private CandidateRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
 

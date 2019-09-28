@@ -4,6 +4,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Setter
@@ -15,8 +17,15 @@ public class Category {
     @Column(unique = true)
     private String name;
     private long price;
+    @ManyToMany(mappedBy = "categories", cascade = CascadeType.REMOVE)
+    private Set<Instructor> instructors = new HashSet<>();
 
     public Category() {
 
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

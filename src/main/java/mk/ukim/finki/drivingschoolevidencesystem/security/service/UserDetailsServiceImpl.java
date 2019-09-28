@@ -3,8 +3,8 @@ package mk.ukim.finki.drivingschoolevidencesystem.security.service;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,11 +20,11 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired
-    private UserRepository userRepository;
+    private UserRepository<User> userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findUserByEmail(username)
+        User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new TrafficSchoolException("User with username: " + username + " not found"));
         List<GrantedAuthority> authorities = new ArrayList<>();
 
