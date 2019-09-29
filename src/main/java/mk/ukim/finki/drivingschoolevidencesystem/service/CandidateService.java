@@ -1,14 +1,10 @@
 package mk.ukim.finki.drivingschoolevidencesystem.service;
 
-import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.CandidateDTO;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Candidate;
-
-import java.util.Collection;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.CandidateDTO;import org.springframework.data.domain.Page;
 
 public interface CandidateService {
     CandidateDTO createNew(CandidateDTO candidateDTO);
     CandidateDTO edit(CandidateDTO candidateDTO);
     void remove(long id);
-    Collection<CandidateDTO> getAll();
+    Page<CandidateDTO> getAll(int pageNumber);
 }

@@ -3,7 +3,7 @@ package mk.ukim.finki.drivingschoolevidencesystem.web;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCredentials;
-import mk.ukim.finki.drivingschoolevidencesystem.service.impl.UserService;
+import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

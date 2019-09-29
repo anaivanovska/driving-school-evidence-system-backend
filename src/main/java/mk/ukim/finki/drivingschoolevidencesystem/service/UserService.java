@@ -1,4 +1,4 @@
-package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
+package mk.ukim.finki.drivingschoolevidencesystem.service;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 
