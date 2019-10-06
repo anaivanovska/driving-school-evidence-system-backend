@@ -11,9 +11,9 @@ import java.util.Collection;
 import java.util.Optional;
 
 @Repository
-public interface UserRepository<T extends User> extends JpaRepository<T, Long> {
-    T findByEmbg(String embg);
-    Optional<T> findByEmail(String email);
-    Optional<T> findByIdAndRoles_name(long id, String name);
-    Page<T> findAllByRoles_name(String name, Pageable pageable);
+public interface UserRepository extends JpaRepository<User, Long> {
+    User findByEmbg(String embg);
+    Optional<User> findByEmail(String email);
+    Optional<User> findByIdAndRoles_name(long id, String name);
+    Page<User> findAllByRoles_name(String name, Pageable pageable);
 }

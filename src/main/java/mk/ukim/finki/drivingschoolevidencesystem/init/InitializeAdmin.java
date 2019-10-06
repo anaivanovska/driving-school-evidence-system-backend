@@ -5,7 +5,6 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchool
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.CandidateRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;

@@ -12,8 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 @Service("categoryService")
 public class CategoryServiceImpl implements CategoryService {
@@ -25,7 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public CategoryDTO createNew(CategoryDTO categoryDTO) {
-        Category category = categoryRepository.findCategoryByName(categoryDTO.getName());
+        Category category = categoryRepository.findByName(categoryDTO.getName());
         if(category != null) {
             throw new TrafficSchoolException("Category with name: " + categoryDTO.getName() +" exists.");
         }
@@ -53,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Transactional
     @Override
     public void remove(String name) {
-        Category category = categoryRepository.findCategoryByName(name);
+        Category category = categoryRepository.findByName(name);
         if(category == null) {
             throw new TrafficSchoolException("Category with name " + name + " does not exist.");
         }

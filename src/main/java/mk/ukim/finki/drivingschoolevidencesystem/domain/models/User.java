@@ -1,6 +1,8 @@
 package mk.ukim.finki.drivingschoolevidencesystem.domain.models;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import org.hibernate.annotations.DiscriminatorFormula;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -8,8 +10,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@Data
+@Getter
+@Setter
 public class User {
     @Id
     @GeneratedValue(strategy =GenerationType.AUTO)
@@ -29,7 +31,7 @@ public class User {
     private String address;
     private String phoneNumber;
     private String gender;
-    @ManyToMany(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name="user_role",
             joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},

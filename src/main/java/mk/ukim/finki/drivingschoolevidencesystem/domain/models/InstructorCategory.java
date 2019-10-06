@@ -6,22 +6,18 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Setter
 @Getter
-public class Category {
+@Setter
+public class InstructorCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @Column(unique = true)
-    private String name;
-    private long price;
+    @ManyToOne
+    private Category category;
+    @ManyToOne
+    private User instructor;
 
-    public Category() {
+    public InstructorCategory() {
 
-    }
-
-    @Override
-    public String toString() {
-        return name;
     }
 }

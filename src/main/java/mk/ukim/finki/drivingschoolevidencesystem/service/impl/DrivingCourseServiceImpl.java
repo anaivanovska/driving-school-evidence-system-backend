@@ -8,7 +8,7 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DrivingCourse;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Vehicle;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.DrivingCourseRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.CandidateRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.VehicleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.DrivingCourseService;
 import org.modelmapper.ModelMapper;
@@ -24,7 +24,7 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
-    private CandidateRepository candidateRepository;
+    private UserRepository userRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -53,7 +53,7 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getUserByIdAndRole(long id, String roleName) {
-        return candidateRepository.findByIdAndRoles_name(id, roleName)
+        return userRepository.findByIdAndRoles_name(id, roleName)
                 .orElseThrow(() -> new TrafficSchoolException("Candidate with id " + id + " not found"));
     }
 
