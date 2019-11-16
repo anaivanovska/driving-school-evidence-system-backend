@@ -9,7 +9,10 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
         import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
         import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
         import org.modelmapper.ModelMapper;
+        import org.slf4j.Logger;
         import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.data.domain.Page;
+        import org.springframework.data.domain.Pageable;
         import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
         import org.springframework.stereotype.Service;
         import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +20,7 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
         import java.util.HashSet;
         import java.util.Set;
+        import java.util.stream.Collectors;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -65,6 +69,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void remove(long id) {
         userRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public Page<UserDTO> getAllWithRole(String roleName, Pageable pageable) {
+        Page<User> users = userRepository.findAllByRoles_name(roleName, pageable);
+        Page<UserDTO> userDtos =  users.map(user -> modelMapper.map(user, UserDTO.class));
+        return userDtos;
     }
 
     public void setUserData(User user, UserDTO userDTO) {
