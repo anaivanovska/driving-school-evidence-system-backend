@@ -1,26 +1,23 @@
 package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
-        import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
-        import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
-        import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
-        import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-        import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
-        import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
-        import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
-        import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
-        import org.modelmapper.ModelMapper;
-        import org.slf4j.Logger;
-        import org.springframework.beans.factory.annotation.Autowired;
-        import org.springframework.data.domain.Page;
-        import org.springframework.data.domain.Pageable;
-        import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-        import org.springframework.stereotype.Service;
-        import org.springframework.transaction.annotation.Propagation;
-        import org.springframework.transaction.annotation.Transactional;
-
-        import java.util.HashSet;
-        import java.util.Set;
-        import java.util.stream.Collectors;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
+import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {

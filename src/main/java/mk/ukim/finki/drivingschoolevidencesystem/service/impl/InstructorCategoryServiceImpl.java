@@ -32,7 +32,7 @@ public class InstructorCategoryServiceImpl implements InstructorCategoryService{
     private ModelMapper modelMapper;
 
 
-    @Transactional
+    @Transactional(propagation = Propagation.REQUIRED)
     @Override
     public CategoryDTO addNewCategory(long instructorId, String categoryName) {
         InstructorCategory instructorCategory = instructorCategoryRepository.findByInstructor_IdAndCategory_Name(instructorId, categoryName);
@@ -49,6 +49,16 @@ public class InstructorCategoryServiceImpl implements InstructorCategoryService{
         throw new TrafficSchoolException("Category with name  " + categoryName + " for instructor with id " + instructorCategory + " already exists");
     }
 
+    @Transactional
+    @Override
+    public List<CategoryDTO> addAllCategories(long instructorId, List<String> names) {
+        List<CategoryDTO> categories = new ArrayList<>();
+        names.forEach(name -> {
+            CategoryDTO categoryDTO = this.addNewCategory(instructorId, name);
+            categories.add(categoryDTO);
+        });
+        return categories;
+    }
     @Transactional(propagation = Propagation.MANDATORY)
     public User findInstructorWihtId(long id) {
         User instructor = userRepository.findByIdAndRoles_name(id, Constants.Role.INSTRUCTOR.name())
@@ -76,4 +86,10 @@ public class InstructorCategoryServiceImpl implements InstructorCategoryService{
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
     }
+
+    @Transactional (propagation = Propagation.MANDATORY)
+    public List<Category> findAllCategories(List<String> names) {
+        return categoryRepository.findCategoriesByName(names);
+    }
+
 }
