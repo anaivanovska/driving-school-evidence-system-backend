@@ -35,8 +35,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO createNew(UserDTO userDTO) {
-        User user = userRepository.findByEmbg(userDTO.getEmbg());
-        if(user == null) {
+        User user = userRepository.findByEmbg(userDTO.getEmbg());        if(user == null) {
             user = new User();
             setUserData(user, userDTO);
             String password = passwordGenerator.generateRandomPassword();

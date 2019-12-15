@@ -9,9 +9,7 @@ import java.time.LocalDate;
 public class QualificationDTO {
     private long id;
     private String type;
-    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate startDate;
-    @JsonFormat(pattern = "dd.MM.yyyy")
     private LocalDate endDate;
     private long totalHours;
 

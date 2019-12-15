@@ -11,11 +11,10 @@ public class VehicleDTO implements Serializable {
     private String type;
     private String brand;
     private String registrationNumber;
-    @JsonFormat(pattern = "dd.MM.yyyy HH:mm")
     private LocalDateTime registrationDate;
     private String comment;
     private String categoryName;
-    private UserDTO instructor;
+    private long instructorId;
 
     public VehicleDTO() {
 

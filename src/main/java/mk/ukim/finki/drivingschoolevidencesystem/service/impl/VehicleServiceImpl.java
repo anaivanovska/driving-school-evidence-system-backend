@@ -59,8 +59,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     private void setData(Vehicle vehicle, VehicleDTO vehicleDTO) {
         String categoryName = vehicleDTO.getCategoryName();
-        long instructorId = vehicleDTO.getInstructor().getId();
-
+        long instructorId = vehicleDTO.getInstructorId();
         vehicle = modelMaper.map(vehicleDTO, Vehicle.class);
         vehicle.setCategory(this.getCategory(categoryName));
         vehicle.setInstructor(this.getInstructor(instructorId));

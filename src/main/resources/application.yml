@@ -11,3 +11,5 @@ admin.lastName: Благојовски
 admin.email: zebra@yahoo.com
 admin.password: nimda
 admin.role: ADMIN
+server:
+  port: 8081

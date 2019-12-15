@@ -12,7 +12,8 @@ import java.util.List;
 public interface CategoryRepository extends CrudRepository<Category, Long> {
     Category findByName(String name);
     void deleteCategoryByName(String name);
-    @Query(value = "select c from category c where c.name in :names")
+
+    @Query(value = "select c from category c where c.name in :names", nativeQuery = true)
     List<Category> findCategoriesByName(@Param("names") List<String> names);
 }
 

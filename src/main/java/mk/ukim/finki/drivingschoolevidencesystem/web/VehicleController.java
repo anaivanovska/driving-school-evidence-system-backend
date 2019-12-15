@@ -11,7 +11,7 @@ public class VehicleController {
     @Autowired
     private VehicleServiceImpl vehicleService;
 
-    @PostMapping("/createNew")
+    @PostMapping("/new")
     public VehicleDTO createNew(@RequestBody VehicleDTO vehicleDTO){
         return this.vehicleService.createNew(vehicleDTO);
     }

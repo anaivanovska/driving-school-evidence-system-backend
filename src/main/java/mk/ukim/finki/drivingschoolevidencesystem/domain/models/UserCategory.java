@@ -8,16 +8,17 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-public class InstructorCategory {
+public class UserCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @ManyToOne
     private Category category;
     @ManyToOne
-    private User instructor;
+    private User user;
+    private String role;
 
-    public InstructorCategory() {
+    public UserCategory() {
 
     }
 }
