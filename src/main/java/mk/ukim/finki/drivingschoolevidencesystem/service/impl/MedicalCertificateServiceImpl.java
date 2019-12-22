@@ -5,7 +5,9 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.MedicalCertificateDT
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.MedicalCertificate;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.MedicalCertificateRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.MedicalCertificateService;
 import org.modelmapper.ModelMapper;
@@ -14,12 +16,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class MedicalCertificateServiceImpl implements MedicalCertificateService{
     @Autowired
     private MedicalCertificateRepository medicalCertificateRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserCategoryRepository userCategoryRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -41,9 +45,12 @@ public class MedicalCertificateServiceImpl implements MedicalCertificateService{
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User findCandidate(long id) {
-        User candidate = userRepository.findByIdAndRoles_name(id, Constants.Role.CANDIDATE.name())
-                                        .orElseThrow(() -> new TrafficSchoolException("Candidate with id = " + id + " does not exist"));
-        return candidate;
+        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser_IdAndRole(id, Constants.Role.CANDIDATE.name());
+
+        if (userCategoryList.size() == 0) {
+            throw new TrafficSchoolException("User with id " + id + " not found");
+        }
+        return userCategoryList.get(0).getUser();
     }
 
     @Transactional

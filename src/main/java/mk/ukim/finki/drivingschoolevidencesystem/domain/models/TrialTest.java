@@ -16,7 +16,7 @@ public class TrialTest {
     private String testNumber;
     private LocalDate examinationDate;
     private int points;
-    @OneToOne
+    @ManyToOne
     private DrivingCourse drivingCourse;
 
     public TrialTest() {}

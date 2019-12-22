@@ -16,8 +16,9 @@ public class MedicalCertificate {
     private String number;
     private LocalDate issueDate;
     private String issuePlace;
-    @OneToOne
+    @ManyToOne
     private User candidate;
+
 
     public MedicalCertificate() {
 

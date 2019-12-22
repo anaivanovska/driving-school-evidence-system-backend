@@ -1,10 +1,9 @@
 package mk.ukim.finki.drivingschoolevidencesystem.init;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
@@ -21,7 +20,7 @@ public class InitializeAdmin {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private UserCategoryRepository userCategoryRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -37,10 +36,12 @@ public class InitializeAdmin {
            user.setLastName(admin.getLastName());
            user.setEmail(admin.getEmail());
            user.setPassword(encodedPassword);
-           Role admin = roleRepository.findById(Constants.Role.ADMIN.name())
-                                    .orElseThrow(() -> new TrafficSchoolException("Role admin not found"));
-           user.getRoles().add(admin);
+
            user = (User) userRepository.save(user);
+           UserCategory userCategory = new UserCategory();
+           userCategory.setUser(user);
+           userCategory.setRole(Constants.Role.ADMIN.name());
+           userCategoryRepository.save(userCategory);
         }
     }
 }

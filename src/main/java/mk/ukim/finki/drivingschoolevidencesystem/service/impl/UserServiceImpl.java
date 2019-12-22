@@ -2,9 +2,8 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
 import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
@@ -17,6 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service("userService")
@@ -24,7 +24,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
+    private UserCategoryRepository userCategoryRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -35,7 +35,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public UserDTO createNew(UserDTO userDTO) {
-        User user = userRepository.findByEmbg(userDTO.getEmbg());        if(user == null) {
+        User user = userRepository.findByEmbg(userDTO.getEmbg());
+        if(user == null) {
             user = new User();
             setUserData(user, userDTO);
             String password = passwordGenerator.generateRandomPassword();
@@ -70,7 +71,8 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Page<UserDTO> getAllWithRole(String roleName, Pageable pageable) {
-        Page<User> users = userRepository.findAllByRoles_name(roleName, pageable);
+        Page<User> users = userCategoryRepository.findAllByRole(roleName, pageable)
+                                                    .map(user -> user.getUser());
         Page<UserDTO> userDtos =  users.map(user -> modelMapper.map(user, UserDTO.class));
         return userDtos;
     }
@@ -88,24 +90,8 @@ public class UserServiceImpl implements UserService {
         user.setAddress(userDTO.getAddress());
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setGender(userDTO.getGender());
-        user.setRoles(getRoles(userDTO.getRoles()));
     }
 
-    public Set<Role> getRoles(Set<String> roles) {
-        Set<Role> userRoles = new HashSet<>();
-        for(String name : roles) {
-            userRoles.add(getRole(name));
-        }
-        return userRoles;
-    }
-
-    @Transactional(propagation = Propagation.MANDATORY)
-    public Role getRole(String name) {
-        Role role = roleRepository.findById(name)
-                .orElseThrow(() -> new TrafficSchoolException("Role with name: " + name + " does not exist"));
-
-        return role;
-    }
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getById(long id) {

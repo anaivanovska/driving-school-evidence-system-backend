@@ -5,9 +5,10 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.VehicleDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Category;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Vehicle;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.CategoryRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.VehicleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.VehicleService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +17,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 public class VehicleServiceImpl implements VehicleService {
     @Autowired
@@ -23,7 +26,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private ModelMapper modelMaper;
     @Autowired
-    private UserRepository userRepository;
+    private UserCategoryRepository userCategoryRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -50,11 +53,13 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public User getInstructor(long id) {
-        User instructor = userRepository.findByIdAndRoles_name(id, Constants.Role.INSTRUCTOR.name())
-                .orElseThrow(() -> new TrafficSchoolException("Instructor with id = " + id + " does not exist"));
+    public User findInstructor(long id) {
+        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser_IdAndRole(id, Constants.Role.INSTRUCTOR.name());
 
-        return instructor;
+        if (userCategoryList.size() == 0) {
+            throw new TrafficSchoolException("User with id " + id + " not found");
+        }
+        return userCategoryList.get(0).getUser();
     }
 
     private void setData(Vehicle vehicle, VehicleDTO vehicleDTO) {
@@ -62,7 +67,7 @@ public class VehicleServiceImpl implements VehicleService {
         long instructorId = vehicleDTO.getInstructorId();
         vehicle = modelMaper.map(vehicleDTO, Vehicle.class);
         vehicle.setCategory(this.getCategory(categoryName));
-        vehicle.setInstructor(this.getInstructor(instructorId));
+        vehicle.setInstructor(this.findInstructor(instructorId));
     }
 
     @Transactional

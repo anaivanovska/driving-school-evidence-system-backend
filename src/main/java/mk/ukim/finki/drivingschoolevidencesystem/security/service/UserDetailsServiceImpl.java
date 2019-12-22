@@ -4,6 +4,8 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchool
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,17 +22,23 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired
-    private UserRepository userRepository;
+    private UserCategoryRepository userCategoryRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new TrafficSchoolException("User with username: " + username + " not found"));
+        List<UserCategory> userDetails = userCategoryRepository.findAllByUser_Email(username);
+
+        if (userDetails.size() == 0) {
+            throw new TrafficSchoolException("User with username: " + username + " not found");
+        }
+
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        for(Role role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(SecurityConstants.GRANTED_AUTHORITY_PREFIX + role.getName()));
+        for(UserCategory userRole : userDetails) {
+            authorities.add(new SimpleGrantedAuthority(SecurityConstants.GRANTED_AUTHORITY_PREFIX + userRole.getRole()));
         }
+
+        User user = userDetails.get(0).getUser();
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
     }
 

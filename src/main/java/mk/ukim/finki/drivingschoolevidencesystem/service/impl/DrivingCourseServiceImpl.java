@@ -6,9 +6,10 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.DrivingCourseInputDT
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DrivingCourse;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Vehicle;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.DrivingCourseRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.VehicleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.DrivingCourseService;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service("drivingCourseService")
 public class DrivingCourseServiceImpl implements DrivingCourseService {
     @Autowired
@@ -24,7 +27,7 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserCategoryRepository userCategoryRepository;
     @Autowired
     private ModelMapper modelMapper;
 
@@ -53,8 +56,13 @@ public class DrivingCourseServiceImpl implements DrivingCourseService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User getUserByIdAndRole(long id, String roleName) {
-        return userRepository.findByIdAndRoles_name(id, roleName)
-                .orElseThrow(() -> new TrafficSchoolException("Candidate with id " + id + " not found"));
+        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser_IdAndRole(id, roleName);
+
+        if (userCategoryList.size() == 0 ) {
+            throw new TrafficSchoolException("Candidate with id " + id + " not found");
+        }
+
+        return userCategoryList.get(0).getUser();
     }
 
     @Transactional(propagation = Propagation.MANDATORY)

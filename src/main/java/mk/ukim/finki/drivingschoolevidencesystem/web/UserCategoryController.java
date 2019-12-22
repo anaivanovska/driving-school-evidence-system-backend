@@ -2,11 +2,14 @@ package mk.ukim.finki.drivingschoolevidencesystem.web;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.CategoryDTO;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.service.UserCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/userCategory")
@@ -28,5 +31,10 @@ public class UserCategoryController {
     @GetMapping("/{id}/{role}/categories")
     public List<CategoryDTO> getAllCategoriesForInstructor(@PathVariable long id, @PathVariable String role) {
         return userCategoryService.getAllCategories(id, role);
+    }
+
+    @GetMapping("/{role}/usersAndCategories")
+    public Map<String, List<UserDTO>> getAllUsersGroupedByategory(@PathVariable String role) {
+        return userCategoryService.getAllUsersGroupedByCategory(role);
     }
 }
