@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VehicleServiceImpl implements VehicleService {
@@ -29,6 +30,15 @@ public class VehicleServiceImpl implements VehicleService {
     private UserCategoryRepository userCategoryRepository;
     @Autowired
     private CategoryRepository categoryRepository;
+
+    @Transactional
+    @Override
+    public List<VehicleDTO> findAllVehicles() {
+        return vehicleRepository.findAll()
+                                .stream()
+                                .map(vehicle -> modelMaper.map(vehicle, VehicleDTO.class))
+                                .collect(Collectors.toList());
+    }
 
     @Transactional
     @Override
