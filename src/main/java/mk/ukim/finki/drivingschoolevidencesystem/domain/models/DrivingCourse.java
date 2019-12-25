@@ -22,8 +22,8 @@ public class DrivingCourse {
     private User candidate;
     @ManyToOne
     private Vehicle vehicle;
-    @OneToMany(mappedBy = "drivingCourse", fetch = FetchType.LAZY)
-    Set<Qualification> qualifications = new HashSet<>();
+    @ManyToOne
+    private Category category;
 
     public DrivingCourse() {
 

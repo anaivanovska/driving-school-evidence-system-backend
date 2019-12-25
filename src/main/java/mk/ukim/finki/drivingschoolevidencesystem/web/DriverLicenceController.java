@@ -1,17 +1,24 @@
 package mk.ukim.finki.drivingschoolevidencesystem.web;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.DriverLicenceDTO;
-import mk.ukim.finki.drivingschoolevidencesystem.service.impl.DriverLicenceServiceImpl;
+import mk.ukim.finki.drivingschoolevidencesystem.service.DriverLicenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/driverLicence")
 public class DriverLicenceController {
     @Autowired
-    private DriverLicenceServiceImpl driverLicenceService;
+    private DriverLicenceService driverLicenceService;
 
-    @PostMapping("/createNew")
+    @GetMapping("/all/{userId}")
+    public List<DriverLicenceDTO> getAllForUser(@PathVariable long userId) {
+        return driverLicenceService.getAllForUser(userId);
+    }
+
+    @PostMapping("/new")
     public DriverLicenceDTO createNew(@RequestBody DriverLicenceDTO driverLicenceDTO, @RequestParam long candidateId) {
         return this.driverLicenceService.createNew(driverLicenceDTO, candidateId);
     }

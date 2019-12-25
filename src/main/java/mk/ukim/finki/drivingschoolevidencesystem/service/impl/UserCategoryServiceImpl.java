@@ -94,7 +94,7 @@ public class UserCategoryServiceImpl implements UserCategoryService {
 
     @Override
     public Map<String, List<UserDTO>> getAllUsersGroupedByCategory(String role) {
-        List<UserCategory> userCategories = userCategoryRepository.findAllByRole(role);
+         List<UserCategory> userCategories = userCategoryRepository.findAllByRole(role);
 
         Map<String, List<UserDTO>> result = new HashMap<>();
         for(UserCategory userCategory : userCategories) {

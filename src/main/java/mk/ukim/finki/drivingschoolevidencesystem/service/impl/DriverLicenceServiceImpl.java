@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class DriverLicenceServiceImpl implements DriverLicenceService {
     @Autowired
@@ -37,7 +40,7 @@ public class DriverLicenceServiceImpl implements DriverLicenceService {
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public User findCandidate(long id) {
+    protected User findCandidate(long id) {
         User candidate = userRepository.findById(id)
                                                 .orElseThrow(() -> new TrafficSchoolException("Candidate with id = " + id + " does not exist"));
         return candidate;
@@ -60,5 +63,14 @@ public class DriverLicenceServiceImpl implements DriverLicenceService {
     @Override
     public void remove(long id) {
         driverLicenceRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public List<DriverLicenceDTO> getAllForUser(long userId) {
+        return driverLicenceRepository.findAllByOwner_Id(userId)
+                                        .stream()
+                                        .map(driverLicence -> modelMapper.map(driverLicence, DriverLicenceDTO.class))
+                                        .collect(Collectors.toList());
     }
 }

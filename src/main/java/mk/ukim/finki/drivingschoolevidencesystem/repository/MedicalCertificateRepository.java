@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface MedicalCertificateRepository extends CrudRepository<MedicalCertificate, Long> {
-    MedicalCertificate findByNumberAndCandidate_Id(String number, long id);
+    MedicalCertificate findByNumberAndDrivingCourse_Id(String number, long id);
+    MedicalCertificate findByDrivingCourse_Id(long id);
 }

@@ -6,13 +6,11 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
-@DependsOn("initializeRoles")
 @Component
 public class InitializeAdmin {
     @Autowired

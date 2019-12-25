@@ -1,17 +1,26 @@
 package mk.ukim.finki.drivingschoolevidencesystem.web;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.TrialTestDTO;
-import mk.ukim.finki.drivingschoolevidencesystem.service.impl.TrialTestServiceImpl;
+import mk.ukim.finki.drivingschoolevidencesystem.service.TrialTestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
-@RequestMapping("/api/trialTest")public class TrialTestController {
-    @Autowired
-    private TrialTestServiceImpl trialTestService;
+import java.util.List;
 
-    @PostMapping("/createNew")
-    public TrialTestDTO createNew(@RequestBody TrialTestDTO trialTestDTO, @RequestParam long drivingCourseId) {
+@RestController
+@RequestMapping("/api/trialTest")
+public class TrialTestController {
+
+    @Autowired
+    protected TrialTestService trialTestService;
+
+    @GetMapping("/all/{drivingCourseId}")
+    public List<TrialTestDTO> getAllForDrivingCourse(@PathVariable long drivingCourseId) {
+        return trialTestService.getAllTrialTestsForDrivingCourse(drivingCourseId);
+    }
+
+    @PostMapping("/new/{drivingCourseId}")
+    public TrialTestDTO createNew(@RequestBody TrialTestDTO trialTestDTO, @PathVariable long drivingCourseId) {
         return this.trialTestService.createNew(trialTestDTO, drivingCourseId);
     }
 

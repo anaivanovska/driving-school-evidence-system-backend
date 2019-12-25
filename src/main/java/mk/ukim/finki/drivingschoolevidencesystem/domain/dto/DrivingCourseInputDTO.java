@@ -4,10 +4,10 @@ import lombok.Data;
 
 @Data
 public class DrivingCourseInputDTO {
-    private long id;
     private String ordinalNumber;
     private long lecturerId;
     private long vehicleId;
+    private String categoryName;
 
     public DrivingCourseInputDTO() {
 

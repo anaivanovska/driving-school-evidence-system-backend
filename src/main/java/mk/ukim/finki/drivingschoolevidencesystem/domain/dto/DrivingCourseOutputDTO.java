@@ -11,6 +11,7 @@ public class DrivingCourseOutputDTO {
     private String ordinalNumber;
     private UserDTO lecturer;
     private VehicleDTO vehicle;
+    private CategoryDTO categoryDTO;
     private Set<QualificationDTO> qualifications = new HashSet<>();
     private TrialTestDTO trialTest;
 

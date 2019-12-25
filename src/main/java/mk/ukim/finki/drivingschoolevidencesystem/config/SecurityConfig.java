@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter{
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     UserDetailsServiceImpl userDetailsServiceImpl;
@@ -34,13 +34,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
                 .disable()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/login").permitAll()
-                .antMatchers( "/api/category/createNew","/api/category/edit", "/api/category/remove").hasRole(Constants.Role.ADMIN.name())
-                .antMatchers( "/api/instructor/createNew","/api/instructor/edit", "/api/instructor/remove").hasRole(Constants.Role.ADMIN.name())
+                .antMatchers("/api/category/createNew", "/api/category/edit", "/api/category/remove").hasRole(Constants.Role.ADMIN.name())
+                .antMatchers("/api/instructor/createNew", "/api/instructor/edit", "/api/instructor/remove").hasRole(Constants.Role.ADMIN.name())
+                .antMatchers("/api/instructor/createNew", "/api/vehicle/edit", "/api/instructor/remove", "/api/vehicle/new", "/api/vehicle/all").hasRole(Constants.Role.ADMIN.name())
                 .and()
                 .addFilter(new JWTAuthorizationFilter(authenticationManagerBean()))
                 .addFilter(new JWTAuthenticationFilter(authenticationManagerBean()))
                 .exceptionHandling()
-                .authenticationEntryPoint((req,res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
+                .authenticationEntryPoint((req, res, exc) -> res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized"))
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
     }
@@ -61,3 +62,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
         return new BCryptPasswordEncoder();
     }
 }
+

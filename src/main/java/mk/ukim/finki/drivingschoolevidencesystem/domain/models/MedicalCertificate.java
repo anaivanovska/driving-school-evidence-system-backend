@@ -13,11 +13,12 @@ public class MedicalCertificate {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Column(unique = true)
     private String number;
     private LocalDate issueDate;
     private String issuePlace;
-    @ManyToOne
-    private User candidate;
+    @OneToOne
+    private DrivingCourse drivingCourse;
 
 
     public MedicalCertificate() {

@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class QualificationServiceImpl implements QualificationService{
     @Autowired
@@ -32,7 +35,7 @@ public class QualificationServiceImpl implements QualificationService{
         }
 
         setQualification(qualification, qualificationDTO);
-        qualification.setDrivingCourse(getDrivingCourse(drivingCourseId));
+        qualification.setDrivingCourse(findDrivingCourseById(drivingCourseId));
         qualification = qualificationRepository.save(qualification);
         qualificationDTO = modelMapper.map(qualification, QualificationDTO.class);
         return qualificationDTO;
@@ -45,9 +48,9 @@ public class QualificationServiceImpl implements QualificationService{
         qualification.setTotalHours(qualificationDTO.getTotalHours());
     }
     @Transactional(propagation = Propagation.MANDATORY)
-    public DrivingCourse getDrivingCourse(long id) {
-        DrivingCourse drivingCourse = drivingCourseRepository.findById(id)
-                .orElseThrow(() -> new TrafficSchoolException("Driving course  with id = " + id + " does not exist"));
+    public DrivingCourse findDrivingCourseById(long drivingCourseId) {
+        DrivingCourse drivingCourse = drivingCourseRepository.findById(drivingCourseId)
+                .orElseThrow(() -> new TrafficSchoolException("Driving course  with id = " + drivingCourseId + " does not exist"));
         return drivingCourse;
     }
 
@@ -68,5 +71,14 @@ public class QualificationServiceImpl implements QualificationService{
     @Override
     public void remove(long id) {
         this.qualificationRepository.deleteById(id);
+    }
+
+    @Override
+    public List<QualificationDTO> getAllQualificationsForDrivingCourse(long drivingCourseId) {
+
+        return qualificationRepository.findByDrivingCourse_Id(drivingCourseId)
+                                       .stream()
+                                       .map(qualification -> modelMapper.map(qualification, QualificationDTO.class))
+                                       .collect(Collectors.toList());
     }
 }

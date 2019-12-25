@@ -1,18 +1,25 @@
-    package mk.ukim.finki.drivingschoolevidencesystem.web;
+package mk.ukim.finki.drivingschoolevidencesystem.web;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.QualificationDTO;
-import mk.ukim.finki.drivingschoolevidencesystem.service.impl.QualificationServiceImpl;
+import mk.ukim.finki.drivingschoolevidencesystem.service.QualificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/qualification")
 public class QualificationController {
     @Autowired
-    private QualificationServiceImpl qualificationService;
+    private QualificationService qualificationService;
 
-    @PostMapping("/createNew")
-    public QualificationDTO createNew(@RequestBody QualificationDTO qualificationDTO, @RequestParam long drivingCourseId) {
+    @GetMapping("/all/{drivingCourseId}")
+    public List<QualificationDTO> getAllQualificationsForDrivingCourse(@PathVariable long drivingCourseId) {
+        return qualificationService.getAllQualificationsForDrivingCourse(drivingCourseId);
+    }
+
+    @PostMapping("/new/{drivingCourseId}")
+    public QualificationDTO createNew(@RequestBody QualificationDTO qualificationDTO, @PathVariable long drivingCourseId) {
         return qualificationService.createNew(qualificationDTO, drivingCourseId);
     }
 

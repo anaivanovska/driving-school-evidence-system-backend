@@ -5,8 +5,10 @@ import lombok.Setter;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Calendar;
+import java.util.Date;
+
 
 @Entity
 @Setter
@@ -19,7 +21,7 @@ public class Vehicle {
     private String brand;
     @Column(unique = true)
     private String registrationNumber;
-    private LocalDateTime registrationDate;
+    private Date registrationDate;
     private String comment;
     @ManyToOne
     private User instructor;
@@ -30,20 +32,4 @@ public class Vehicle {
 
     }
 
-    private LocalDateTime getNextRegistrationDate() {
-        int registrationYear = registrationDate.getYear();
-        System.out.println("YEAR: " +registrationDate);
-        LocalDateTime nextRegistrationDate = registrationDate.withYear(registrationYear+1);
-        return nextRegistrationDate;
-    }
-    public long getDaysUntilRegistration() {
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime nextRegistrationDate = this.getNextRegistrationDate();
-        long nowMillis = now.toInstant(ZoneOffset.UTC).toEpochMilli();
-        long nextRegistrationDateMillis = nextRegistrationDate.toInstant(ZoneOffset.UTC).toEpochMilli();
-        long timeLeftMillis = nextRegistrationDateMillis - nowMillis;
-        long daysLeft = timeLeftMillis / Constants.MILLISECONDS_IN_DAY;
-        return daysLeft;
-
-    }
 }

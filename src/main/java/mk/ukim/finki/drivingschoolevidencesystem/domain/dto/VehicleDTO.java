@@ -2,7 +2,7 @@ package mk.ukim.finki.drivingschoolevidencesystem.domain.dto;
 
 import lombok.Data;
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.util.Date;
 
 @Data
 public class VehicleDTO implements Serializable {
@@ -10,7 +10,7 @@ public class VehicleDTO implements Serializable {
     private String type;
     private String brand;
     private String registrationNumber;
-    private LocalDateTime registrationDate;
+    private Date registrationDate;
     private String comment;
     private String categoryName;
     private long instructorId;

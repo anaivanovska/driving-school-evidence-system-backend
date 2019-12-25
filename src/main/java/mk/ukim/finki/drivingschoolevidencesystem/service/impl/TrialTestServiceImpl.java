@@ -13,6 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class TrialTestServiceImpl implements TrialTestService {
     @Autowired
@@ -26,14 +29,14 @@ public class TrialTestServiceImpl implements TrialTestService {
     @Override
     public TrialTestDTO createNew(TrialTestDTO trialTestDTO, long drivingCourseId){
         TrialTest trialTest = modelMaper.map(trialTestDTO, TrialTest.class);
-        trialTest.setDrivingCourse(getDrivingCourse(drivingCourseId));
+        trialTest.setDrivingCourse(findDrivingCourseById(drivingCourseId));
         trialTest = trialTestRepository.save(trialTest);
         trialTestDTO = modelMaper.map(trialTest, TrialTestDTO.class);
         return trialTestDTO;
     }
 
     @Transactional(propagation = Propagation.MANDATORY)
-    public DrivingCourse getDrivingCourse(long drivingCourseId) {
+    public DrivingCourse findDrivingCourseById(long drivingCourseId) {
         DrivingCourse drivingCourse = drivingCourseRepository.findById(drivingCourseId)
                                 .orElseThrow(() -> new TrafficSchoolException("Driving course with id = " + drivingCourseId + " does not exist"));
         return drivingCourse;
@@ -55,5 +58,13 @@ public class TrialTestServiceImpl implements TrialTestService {
     @Override
     public void remove(long id) {
         trialTestRepository.deleteById(id);
+    }
+
+    @Override
+    public List<TrialTestDTO> getAllTrialTestsForDrivingCourse(long drivingCourseId) {
+        return trialTestRepository.findAllByDrivingCourse_Id(drivingCourseId)
+                                    .stream()
+                                    .map(trialTest -> modelMaper.map(trialTest, TrialTestDTO.class))
+                                    .collect(Collectors.toList());
     }
 }

@@ -3,9 +3,11 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.MedicalCertificateDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DrivingCourse;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.MedicalCertificate;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.DrivingCourseRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.MedicalCertificateRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
@@ -23,36 +25,30 @@ public class MedicalCertificateServiceImpl implements MedicalCertificateService{
     @Autowired
     private MedicalCertificateRepository medicalCertificateRepository;
     @Autowired
-    private UserCategoryRepository userCategoryRepository;
+    private DrivingCourseRepository drivingCourseRepository;
     @Autowired
     private ModelMapper modelMapper;
 
     @Transactional
     @Override
-    public MedicalCertificateDTO createNew(MedicalCertificateDTO medicalCertificateDTO, long candidateId) {
+    public MedicalCertificateDTO createNew(MedicalCertificateDTO medicalCertificateDTO, long drivingCourseId) {
         String number = medicalCertificateDTO.getNumber();
-        MedicalCertificate medicalCertificate = medicalCertificateRepository.findByNumberAndCandidate_Id(number, candidateId);
-        if(medicalCertificate != null) {
-            throw new TrafficSchoolException("Medical certficate with number: " + number +" for candidate: " + candidateId + " already exists");
+        MedicalCertificate medicalCertificate = medicalCertificateRepository.findByNumberAndDrivingCourse_Id(number, drivingCourseId);
+        if (medicalCertificate != null) {
+            throw new TrafficSchoolException("Medical certficate with number: " + number + " already exists");
         }
         medicalCertificate = modelMapper.map(medicalCertificateDTO, MedicalCertificate.class);
-        medicalCertificate.setCandidate(findCandidate(candidateId));
+        medicalCertificate.setDrivingCourse(findDrivingCourseById(drivingCourseId));
         medicalCertificate = medicalCertificateRepository.save(medicalCertificate);
         medicalCertificateDTO = modelMapper.map(medicalCertificate, MedicalCertificateDTO.class);
 
         return medicalCertificateDTO;
     }
 
-    @Transactional(propagation = Propagation.MANDATORY)
-    public User findCandidate(long id) {
-        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser_IdAndRole(id, Constants.Role.CANDIDATE.name());
-
-        if (userCategoryList.size() == 0) {
-            throw new TrafficSchoolException("User with id " + id + " not found");
-        }
-        return userCategoryList.get(0).getUser();
+    private DrivingCourse findDrivingCourseById(long drivingCourseId) {
+        return drivingCourseRepository.findById(drivingCourseId)
+                                    .orElseThrow(() -> new TrafficSchoolException("Driving course with id " + drivingCourseId + " does not exist"));
     }
-
     @Transactional
     @Override
     public MedicalCertificateDTO edit(MedicalCertificateDTO medicalCertificateDTO) {
@@ -71,5 +67,13 @@ public class MedicalCertificateServiceImpl implements MedicalCertificateService{
     @Override
     public void remove(long id) {
         medicalCertificateRepository.deleteById(id);
+    }
+
+    @Transactional
+    @Override
+    public MedicalCertificateDTO getMedicalCertificateForDrivingCourse(long drivingCourseId) {
+        MedicalCertificate medicalCertificate = medicalCertificateRepository.findByDrivingCourse_Id(drivingCourseId);
+        MedicalCertificateDTO medicalCertificateDTO = modelMapper.map(medicalCertificate, MedicalCertificateDTO.class);
+        return medicalCertificateDTO;
     }
 }

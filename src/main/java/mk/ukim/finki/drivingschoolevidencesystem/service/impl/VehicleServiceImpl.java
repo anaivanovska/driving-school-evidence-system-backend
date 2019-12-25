@@ -47,9 +47,14 @@ public class VehicleServiceImpl implements VehicleService {
         if(vehicle != null) {
             throw new TrafficSchoolException("Vehicle with type = " + vehicleDTO.getType() + ", brand = " + vehicleDTO.getBrand() + ", registrationNumber = " + vehicleDTO.getRegistrationNumber() + " already exists.");
         }
-        setData(vehicle, vehicleDTO);
-        vehicle = vehicleRepository.save(vehicle);
-        vehicleDTO = modelMaper.map(vehicle, VehicleDTO.class);
+        vehicle = new Vehicle();
+        String categoryName = vehicleDTO.getCategoryName();
+        long instructorId = vehicleDTO.getInstructorId();
+        vehicle = modelMaper.map(vehicleDTO, Vehicle.class);
+        vehicle.setCategory(this.getCategory(categoryName));
+        vehicle.setInstructor(this.findInstructor(instructorId));
+        Vehicle result = vehicleRepository.save(vehicle);
+        vehicleDTO = modelMaper.map(result, VehicleDTO.class);
         return vehicleDTO;
     }
 
