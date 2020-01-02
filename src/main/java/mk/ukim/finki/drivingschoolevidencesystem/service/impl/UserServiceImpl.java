@@ -2,9 +2,13 @@ package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserRole;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.InstructorCategoryRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRoleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
 import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -15,16 +19,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private UserCategoryRepository userCategoryRepository;
+    private UserRoleRepository userRoleRepository;
+    @Autowired
+    private RoleRepository roleRepository;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -34,7 +37,7 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public UserDTO createNew(UserDTO userDTO) {
+    public UserDTO createNew(UserDTO userDTO, String role) {
         User user = userRepository.findByEmbg(userDTO.getEmbg());
         if(user == null) {
             user = new User();
@@ -43,6 +46,10 @@ public class UserServiceImpl implements UserService {
             user.setPassword(passwordEncoder.encode(password));
             user = userRepository.save(user);
             //SEND MAIL
+            UserRole userRole = new UserRole();
+            userRole.setUser(user);
+            userRole.setRole(findRoleByName(role));
+            userRoleRepository.save(userRole);
             userDTO = modelMapper.map(user, UserDTO.class);
             return userDTO;
         }
@@ -50,12 +57,29 @@ public class UserServiceImpl implements UserService {
         throw new TrafficSchoolException("User with embg = " + userDTO.getEmbg() + "already exists." );
     }
 
+    @Transactional
+    @Override
+    public UserDTO addRole(String email, String roleName) {
+        User user = findByEmail(email);
+        Role role = findRoleByName(roleName);
+        UserRole userRole = new UserRole();
+        userRole.setUser(user);
+        userRole.setRole(role);
+        userRoleRepository.save(userRole);
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected Role findRoleByName(String roleName) {
+        return roleRepository.findById(roleName)
+                            .orElseThrow(() -> new TrafficSchoolException("Role with name " + roleName + " does not exist"));
+    }
 
     @Transactional
     @Override
     public UserDTO edit(UserDTO userDTO) {
         long id = userDTO.getId();
-        User user = getById(id);
+        User user = findById(id);
         setUserData(user, userDTO);
         user = userRepository.save(user);
         userDTO = modelMapper.map(user, UserDTO.class);
@@ -71,7 +95,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public Page<UserDTO> getAllWithRole(String roleName, Pageable pageable) {
-        Page<User> users = userCategoryRepository.findAllByRole(roleName, pageable)
+        Page<User> users = userRoleRepository.findAllByRole_Name(roleName, pageable)
                                                     .map(user -> user.getUser());
         Page<UserDTO> userDtos =  users.map(user -> modelMapper.map(user, UserDTO.class));
         return userDtos;
@@ -93,17 +117,27 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    @Transactional(propagation = Propagation.MANDATORY)
-    public User getById(long id) {
+    @Transactional(propagation = Propagation.REQUIRED)
+    @Override
+    public UserDTO getById(long id) {
+        User user = findById(id);
+        return modelMapper.map(user, UserDTO.class);
+    }
+
+    @Transactional(propagation =  Propagation.MANDATORY)
+    protected User findById(long id) {
         return userRepository.findById(id)
                 .orElseThrow(() -> new TrafficSchoolException("User with id = " + id + " does not exist"));
     }
-
+    @Transactional(propagation = Propagation.MANDATORY)
+    protected User findByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new TrafficSchoolException("User with email " + email + " does not exist"));
+    }
     @Transactional
     @Override
     public UserDTO getByEmail(String email) {
-        User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new TrafficSchoolException("User with email " + email + " does not exist"));
+        User user = findByEmail(email);
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;
     }

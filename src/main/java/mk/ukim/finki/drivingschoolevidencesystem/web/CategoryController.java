@@ -28,9 +28,9 @@ public class CategoryController {
     }
 
     @DeleteMapping("/remove")
-    public String removeCategory(@RequestParam String name) {
-        this.categoryService.remove(name);
-        return name;
+    public long removeCategory(@RequestParam long id) {
+        this.categoryService.remove(id);
+        return id;
     }
 
     @GetMapping("/all")

@@ -8,18 +8,18 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
-@Table(name = "user_category")
-public class UserCategory {
+@Table(name = "instructor_category")
+public class InstructorCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Category category;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private User user;
-    private String role;
+    private String type;
 
-    public UserCategory() {
+    public InstructorCategory() {
 
     }
 }

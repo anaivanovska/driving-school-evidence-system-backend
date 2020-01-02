@@ -1,5 +1,6 @@
 package mk.ukim.finki.drivingschoolevidencesystem.web;
 
+import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.DriverLicenceDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.service.DriverLicenceService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/driverLicence")
+@CrossOrigin(allowedHeaders = "*", exposedHeaders = SecurityConstants.EXPOSED_HEADERS, origins = "*")
 public class DriverLicenceController {
     @Autowired
     private DriverLicenceService driverLicenceService;

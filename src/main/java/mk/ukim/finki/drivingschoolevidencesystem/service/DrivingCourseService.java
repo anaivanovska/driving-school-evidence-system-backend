@@ -4,7 +4,7 @@ import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.DrivingCourseInputDT
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.DrivingCourseOutputDTO;
 
 public interface DrivingCourseService {
-    DrivingCourseOutputDTO createNew(DrivingCourseInputDTO drivingCourseInputDTO, long candidateId);
+    long createNew(DrivingCourseInputDTO drivingCourseInputDTO, long candidateId);
     DrivingCourseOutputDTO edit(DrivingCourseInputDTO drivingCourseInputDTO);
     void remove(long id);
 }

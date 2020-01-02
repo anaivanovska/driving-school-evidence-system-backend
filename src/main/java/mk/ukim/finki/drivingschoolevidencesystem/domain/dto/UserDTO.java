@@ -23,7 +23,7 @@ public class UserDTO {
     private String address;
     private String phoneNumber;
     private String gender;
-    Set<String> roles;
+
     public UserDTO() {
 
     }

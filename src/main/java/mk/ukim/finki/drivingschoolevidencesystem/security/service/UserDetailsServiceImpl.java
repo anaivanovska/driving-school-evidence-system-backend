@@ -1,12 +1,12 @@
 package mk.ukim.finki.drivingschoolevidencesystem.security.service;
 
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Role;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.InstructorCategory;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserRole;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.InstructorCategoryRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,23 +22,23 @@ import java.util.List;
 public class UserDetailsServiceImpl implements UserDetailsService{
 
     @Autowired
-    private UserCategoryRepository userCategoryRepository;
+    private UserRoleRepository userRoleRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        List<UserCategory> userDetails = userCategoryRepository.findAllByUser_Email(username);
+        List<UserRole> users = userRoleRepository.findAllByUser_Email(username);
 
-        if (userDetails.size() == 0) {
+        if (users.size() == 0) {
             throw new TrafficSchoolException("User with username: " + username + " not found");
         }
 
         List<GrantedAuthority> authorities = new ArrayList<>();
 
-        for(UserCategory userRole : userDetails) {
-            authorities.add(new SimpleGrantedAuthority(SecurityConstants.GRANTED_AUTHORITY_PREFIX + userRole.getRole()));
+        for(UserRole userRole : users) {
+            authorities.add(new SimpleGrantedAuthority(SecurityConstants.GRANTED_AUTHORITY_PREFIX + userRole.getRole().getName()));
         }
 
-        User user = userDetails.get(0).getUser();
+        User user = users.get(0).getUser();
         return new org.springframework.security.core.userdetails.User(username, user.getPassword(), authorities);
     }
 

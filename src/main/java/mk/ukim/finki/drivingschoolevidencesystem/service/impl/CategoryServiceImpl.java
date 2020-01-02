@@ -50,13 +50,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Transactional
     @Override
-    public void remove(String name) {
-        Category category = categoryRepository.findByName(name);
-        if(category == null) {
-            throw new TrafficSchoolException("Category with name " + name + " does not exist.");
-        }
-        categoryRepository.deleteCategoryByName(name);
-    }
+    public long remove(long id) {
+        Category category = categoryRepository.findById(id)
+                                              .orElseThrow(() -> new TrafficSchoolException("Category with id " + id + " does not exist."));
+        categoryRepository.delete(category);
+        return id;
+  }
 
     @Transactional
     @Override

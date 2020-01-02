@@ -1,24 +1,16 @@
 package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
-import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.MedicalCertificateDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.DrivingCourse;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.MedicalCertificate;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.DrivingCourseRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.MedicalCertificateRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.MedicalCertificateService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 public class MedicalCertificateServiceImpl implements MedicalCertificateService{

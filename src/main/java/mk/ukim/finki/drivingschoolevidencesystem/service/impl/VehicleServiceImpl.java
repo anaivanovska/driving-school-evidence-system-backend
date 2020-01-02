@@ -1,14 +1,12 @@
 package mk.ukim.finki.drivingschoolevidencesystem.service.impl;
 
-import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.VehicleDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.exceptions.TrafficSchoolException;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Category;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.User;
-import mk.ukim.finki.drivingschoolevidencesystem.domain.models.UserCategory;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Vehicle;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.CategoryRepository;
-import mk.ukim.finki.drivingschoolevidencesystem.repository.UserCategoryRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.VehicleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.VehicleService;
 import org.modelmapper.ModelMapper;
@@ -27,7 +25,7 @@ public class VehicleServiceImpl implements VehicleService {
     @Autowired
     private ModelMapper modelMaper;
     @Autowired
-    private UserCategoryRepository userCategoryRepository;
+    private UserRepository userRepository;
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -69,12 +67,7 @@ public class VehicleServiceImpl implements VehicleService {
 
     @Transactional(propagation = Propagation.MANDATORY)
     public User findInstructor(long id) {
-        List<UserCategory> userCategoryList = userCategoryRepository.findAllByUser_IdAndRole(id, Constants.Role.INSTRUCTOR.name());
-
-        if (userCategoryList.size() == 0) {
-            throw new TrafficSchoolException("User with id " + id + " not found");
-        }
-        return userCategoryList.get(0).getUser();
+       return userRepository.findById(id).orElseThrow(() -> new TrafficSchoolException("User with id " + id + " not found"));
     }
 
     private void setData(Vehicle vehicle, VehicleDTO vehicleDTO) {

@@ -7,6 +7,6 @@ import java.util.Collection;
 public interface CategoryService {
     CategoryDTO createNew(CategoryDTO categoryDTO);
     CategoryDTO edit(CategoryDTO categoryDTO);
-    void remove(String name);
+    long remove(long id);
     Collection<CategoryDTO> findAll();
 }
