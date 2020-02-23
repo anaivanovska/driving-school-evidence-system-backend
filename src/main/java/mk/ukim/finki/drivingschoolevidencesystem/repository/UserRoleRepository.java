@@ -13,4 +13,5 @@ public interface UserRoleRepository extends CrudRepository<UserRole, Long> {
     List<UserRole> findAllByUser_Email(String email);
     UserRole findByUser_EmailAndRole_Name(String email, String namel);
     Page<UserRole> findAllByRole_Name(String name, Pageable pageable);
+    void deleteAllByUser_Id(long id);
 }

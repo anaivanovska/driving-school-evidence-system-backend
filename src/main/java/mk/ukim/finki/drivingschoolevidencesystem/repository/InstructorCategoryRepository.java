@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface InstructorCategoryRepository extends JpaRepository<InstructorCategory, Long> {
     List<InstructorCategory> findAllByUser_Id(long userId);
+    Page<InstructorCategory> findAllByUser_Id(long userId, Pageable pageable);
     List<InstructorCategory> findAllByUser_IdAndType(long id, String type);
     List<InstructorCategory> findAllByType(String type);
     Page<InstructorCategory> findAllByType(String type, Pageable pageable);

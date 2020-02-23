@@ -15,7 +15,7 @@ public class UserRole {
     private long id;
     @ManyToOne
     private Role role;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private User user;
 
     public UserRole() {

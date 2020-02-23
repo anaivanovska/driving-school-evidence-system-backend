@@ -12,5 +12,6 @@ public interface UserService {
     void remove(long id);
     Page<UserDTO> getAllWithRole(String roleName, Pageable pageable);
     UserDTO getById(long id);
+    Page<UserDTO> search(String value, Pageable pageable);
 
 }

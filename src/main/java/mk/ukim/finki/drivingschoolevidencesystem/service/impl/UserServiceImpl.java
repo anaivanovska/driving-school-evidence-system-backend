@@ -9,16 +9,21 @@ import mk.ukim.finki.drivingschoolevidencesystem.repository.InstructorCategoryRe
 import mk.ukim.finki.drivingschoolevidencesystem.repository.RoleRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRoleRepository;
+import mk.ukim.finki.drivingschoolevidencesystem.repository.search.SearchRepositoryImpl;
 import mk.ukim.finki.drivingschoolevidencesystem.security.generator.PasswordGenerator;
 import mk.ukim.finki.drivingschoolevidencesystem.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("userService")
 public class UserServiceImpl implements UserService {
@@ -34,6 +39,8 @@ public class UserServiceImpl implements UserService {
     private PasswordGenerator passwordGenerator;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
+    @Autowired
+    private SearchRepositoryImpl searchRepositoryImpl;
 
     @Transactional
     @Override
@@ -89,7 +96,9 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void remove(long id) {
+        userRoleRepository.deleteAllByUser_Id(id);
         userRepository.deleteById(id);
+
     }
 
     @Transactional
@@ -108,7 +117,7 @@ public class UserServiceImpl implements UserService {
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setParentName(userDTO.getParentName());
-        user.setProffession(userDTO.getProffession());
+        user.setProfession(userDTO.getProfession());
         user.setBirthDate(userDTO.getBirthDate());
         user.setBirthPlace(userDTO.getBirthPlace());
         user.setAddress(userDTO.getAddress());
@@ -140,6 +149,16 @@ public class UserServiceImpl implements UserService {
         User user = findByEmail(email);
         UserDTO userDTO = modelMapper.map(user, UserDTO.class);
         return userDTO;
+    }
+    @Transactional
+    @Override
+    public Page<UserDTO> search(String value, Pageable pageable) {
+        List<UserDTO> users =  searchRepositoryImpl.searchPhrase(User.class, value, "firstName", "lastName", "embg", "email")
+                                                                .stream()
+                                                                .map(user -> modelMapper.map(user, UserDTO.class))
+                                                                .collect(Collectors.toList());
+        Page<UserDTO> userDTOPage = new PageImpl<>(users, pageable, users.size());
+        return userDTOPage;
     }
 }
 

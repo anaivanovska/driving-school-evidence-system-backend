@@ -12,6 +12,8 @@ import mk.ukim.finki.drivingschoolevidencesystem.repository.UserRepository;
 import mk.ukim.finki.drivingschoolevidencesystem.service.InstructorCategoryService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -76,7 +78,7 @@ public class InstructorCategoryServiceImpl implements InstructorCategoryService 
 
     @Transactional
     @Override
-    public List<CategoryDTO> getAllCategories(long userId, String type) {
+    public List<CategoryDTO> getAllCategoriesByType(long userId, String type) {
         List<InstructorCategory> userCategories = instructorCategoryRepository.findAllByUser_IdAndType(userId, type);
         return userCategories.stream()
                         .map(userCategory -> {
@@ -84,6 +86,13 @@ public class InstructorCategoryServiceImpl implements InstructorCategoryService 
                             return categoryDTO;
                         })
                         .collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    @Transactional
+    @Override
+    public Page<CategoryDTO> getAllCategories(long userId, Pageable pageable) {
+        return instructorCategoryRepository.findAllByUser_Id(userId, pageable)
+                                            .map(instructorCategory -> modelMapper.map(instructorCategory.getCategory(), CategoryDTO.class));
     }
 
     @Transactional

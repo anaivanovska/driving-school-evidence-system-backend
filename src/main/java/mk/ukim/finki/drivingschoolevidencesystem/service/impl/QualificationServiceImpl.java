@@ -34,6 +34,7 @@ public class QualificationServiceImpl implements QualificationService{
             throw new TrafficSchoolException("Qualification of type = " + qualificationDTO.getType() + " for driving course = " + drivingCourseId + " already exists");
         }
 
+        qualification = new Qualification();
         setQualification(qualification, qualificationDTO);
         qualification.setDrivingCourse(findDrivingCourseById(drivingCourseId));
         qualification = qualificationRepository.save(qualification);

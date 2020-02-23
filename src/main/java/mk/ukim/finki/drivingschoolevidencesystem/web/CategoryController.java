@@ -1,9 +1,14 @@
 package mk.ukim.finki.drivingschoolevidencesystem.web;
 
+import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.CategoryDTO;
+import mk.ukim.finki.drivingschoolevidencesystem.domain.models.Category;
 import mk.ukim.finki.drivingschoolevidencesystem.service.impl.CategoryServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -34,7 +39,18 @@ public class CategoryController {
     }
 
     @GetMapping("/all")
-    public Collection<CategoryDTO> getAllCategories() {
-        return this.categoryService.findAll();
+    public Page<CategoryDTO> getAllCategories(@PageableDefault(size = Constants.Page.SIZE, page = Constants.Page.START) Pageable pageable) {
+        return this.categoryService.getAll(pageable);
+    }
+
+
+    @GetMapping("/allAsList")
+    public List<CategoryDTO> getAllCategories() {
+        return this.categoryService.getAll();
+    }
+
+    @GetMapping("/all/{candidateId}")
+    public Page<CategoryDTO> getAllCategoriesFprCandidate(@PathVariable long candidateId, @PageableDefault(size = Constants.Page.SIZE, page = Constants.Page.START) Pageable pageable) {
+        return this.categoryService.getAllForCandidate(candidateId, pageable);
     }
 }

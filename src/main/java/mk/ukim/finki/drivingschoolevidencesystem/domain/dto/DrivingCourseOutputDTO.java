@@ -2,8 +2,8 @@ package mk.ukim.finki.drivingschoolevidencesystem.domain.dto;
 
 import lombok.Data;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 public class DrivingCourseOutputDTO {
@@ -11,9 +11,9 @@ public class DrivingCourseOutputDTO {
     private String ordinalNumber;
     private UserDTO lecturer;
     private VehicleDTO vehicle;
-    private CategoryDTO categoryDTO;
-    private Set<QualificationDTO> qualifications = new HashSet<>();
-    private TrialTestDTO trialTest;
+    private MedicalCertificateDTO medicalCertificate;
+    private List<QualificationDTO> qualifications = new ArrayList<>();
+    private List<TrialTestDTO> trialTests =  new ArrayList<>();
 
     public DrivingCourseOutputDTO() {
 

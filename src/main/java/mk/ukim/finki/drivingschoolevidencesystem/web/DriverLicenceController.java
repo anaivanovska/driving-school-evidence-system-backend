@@ -20,8 +20,9 @@ public class DriverLicenceController {
         return driverLicenceService.getAllForUser(userId);
     }
 
-    @PostMapping("/new")
-    public DriverLicenceDTO createNew(@RequestBody DriverLicenceDTO driverLicenceDTO, @RequestParam long candidateId) {
+    @PostMapping("/new/{candidateId}")
+    public DriverLicenceDTO createNew(@RequestBody DriverLicenceDTO driverLicenceDTO, @PathVariable
+            long candidateId) {
         return this.driverLicenceService.createNew(driverLicenceDTO, candidateId);
     }
 
@@ -30,9 +31,9 @@ public class DriverLicenceController {
         return this.driverLicenceService.edit(driverLicenceDTO);
     }
 
-    @DeleteMapping("/remove")
-    public long remove(@RequestParam long id) {
-        this.driverLicenceService.remove(id);
-        return id;
+    @DeleteMapping("/remove/{driverLicenceId}")
+    public long remove(@PathVariable long driverLicenceId) {
+        this.driverLicenceService.remove(driverLicenceId);
+        return driverLicenceId;
     }
 }

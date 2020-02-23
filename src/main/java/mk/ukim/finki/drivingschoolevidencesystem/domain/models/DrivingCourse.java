@@ -22,8 +22,12 @@ public class DrivingCourse {
     private User candidate;
     @ManyToOne
     private Vehicle vehicle;
-    @ManyToOne
-    private Category category;
+    @OneToOne(mappedBy = "drivingCourse", cascade = CascadeType.REMOVE)
+    private MedicalCertificate medicalCertificate;
+    @OneToMany(mappedBy = "drivingCourse", cascade = CascadeType.REMOVE)
+    private Set<Qualification> qualifications;
+    @OneToMany(mappedBy = "drivingCourse", cascade = CascadeType.REMOVE)
+    private Set<TrialTest> trialTests;
 
     public DrivingCourse() {
 

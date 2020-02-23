@@ -66,7 +66,7 @@ public class UserController {
     }
 
     @GetMapping(BASE_API_URL + "/all/{roleName}")
-    public Page<UserDTO> getUsersWithRole(@PathVariable String roleName, @PageableDefault(size = Constants.Page.SIZE, page = Constants.Page.START) Pageable pageable) {
+    Page<UserDTO> getUsersWithRole(@PathVariable String roleName, @PageableDefault(size = Constants.Page.SIZE, page = Constants.Page.START) Pageable pageable) {
         return userService.getAllWithRole(roleName, pageable);
     }
 

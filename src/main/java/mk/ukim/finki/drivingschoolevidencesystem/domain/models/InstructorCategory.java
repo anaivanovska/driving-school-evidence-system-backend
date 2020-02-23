@@ -13,9 +13,9 @@ public class InstructorCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Category category;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private User user;
     private String type;
 

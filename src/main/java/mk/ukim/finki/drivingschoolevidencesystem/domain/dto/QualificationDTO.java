@@ -1,6 +1,5 @@
 package mk.ukim.finki.drivingschoolevidencesystem.domain.dto;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import java.time.LocalDate;

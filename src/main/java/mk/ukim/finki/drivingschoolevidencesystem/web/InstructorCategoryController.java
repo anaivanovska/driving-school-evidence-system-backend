@@ -1,10 +1,14 @@
 package mk.ukim.finki.drivingschoolevidencesystem.web;
 
+import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.Constants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.constants.SecurityConstants;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.CategoryDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.domain.dto.UserDTO;
 import mk.ukim.finki.drivingschoolevidencesystem.service.InstructorCategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,7 +33,7 @@ public class InstructorCategoryController {
 
     @GetMapping("/{id}/{type}/categories")
     public List<CategoryDTO> getAllCategoriesForInstructor(@PathVariable long id, @PathVariable String type) {
-        return instructorCategoryService.getAllCategories(id, type);
+        return instructorCategoryService.getAllCategoriesByType(id, type);
     }
 
     @GetMapping("/{type}/instructorsAndCategories")
@@ -45,6 +49,11 @@ public class InstructorCategoryController {
     @GetMapping("/allCategories/{instructorId}")
     public Map<String, List<String>> getAllCategoriesForInstructor(@PathVariable long instructorId) {
         return instructorCategoryService.getAllCategoriesGroupedByTypeForInstructor(instructorId);
+    }
+
+    @GetMapping("/allCategories/page/{instructorId}")
+    public Page<CategoryDTO> getAllCategoriesForInstructorAsPage(@PathVariable long instructorId,  @PageableDefault(size = Constants.Page.SIZE, page = Constants.Page.START) Pageable pageable) {
+        return instructorCategoryService.getAllCategories(instructorId, pageable);
     }
 
 }

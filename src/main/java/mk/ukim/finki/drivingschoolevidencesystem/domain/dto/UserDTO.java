@@ -17,7 +17,7 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String parentName;
-    private String proffession;
+    private String profession;
     private LocalDate birthDate;
     private String birthPlace;
     private String address;
