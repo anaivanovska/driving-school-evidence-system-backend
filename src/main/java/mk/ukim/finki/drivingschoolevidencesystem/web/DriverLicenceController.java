@@ -12,6 +12,7 @@ import java.util.List;
 @RequestMapping("/api/driverLicence")
 @CrossOrigin(allowedHeaders = "*", exposedHeaders = SecurityConstants.EXPOSED_HEADERS, origins = "*")
 public class DriverLicenceController {
+
     @Autowired
     private DriverLicenceService driverLicenceService;
 

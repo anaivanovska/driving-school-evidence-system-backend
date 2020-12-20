@@ -13,8 +13,11 @@ import java.util.List;
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Long> {
     Category findByName(String name);
+
     List<Category> findAll();
+
     Page<Category> findAll(Pageable pageable);
+
     @Query(value = "select c from category c where c.name in :names", nativeQuery = true)
     List<Category> findCategoriesByName(@Param("names") List<String> names);
 }
